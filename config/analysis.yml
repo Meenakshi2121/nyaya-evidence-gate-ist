@@ -18,8 +18,13 @@ data:
     favourable_codes: [4]
     missing_codes: [0, 9]
   aspirin:
-    treated_values: ["Y", "A", 1]
-    control_values: ["N", 0]
+    treated_values: ["Y"]
+    control_values: ["N"]
+
+  heparin:
+    no_heparin_values: ["N"]
+    low_dose_values: ["L"]
+    higher_dose_values: ["H", "M"]
 
 cross_fitting:
   folds: 5
