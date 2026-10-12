@@ -15,8 +15,8 @@ data:
     six_month_outcome: "OCCODE"
   outcome:
     name: death_or_dependency_at_six_months
-    adverse_codes: [1, 2, 3]
-    favourable_codes: [4]
+    adverse_codes: [1, 2]
+    favourable_codes: [3, 4]
     missing_codes: [0, 9]
   aspirin:
     treated_values: ["Y"]

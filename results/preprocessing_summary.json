@@ -1,0 +1,21 @@
+{
+  "source_file": "data/raw/IST_corrected.csv",
+  "source_sha256": "a350aed2329bbcde23c05caaa96b9275b44b017adecc2fd02231d590454695d5",
+  "raw_rows": 19435,
+  "analysis_rows": 19285,
+  "excluded_missing_outcome": 150,
+  "aspirin_allocation": {
+    "0": 9646,
+    "1": 9639
+  },
+  "six_month_outcome": {
+    "death_or_dependency": 12125,
+    "alive_and_independent": 7160
+  },
+  "heparin_group": {
+    "none": 9644,
+    "higher": 4824,
+    "low": 4817
+  },
+  "note": "Patient-level prepared files are excluded from version control."
+}

@@ -1,0 +1,7 @@
+{
+  "input_file": "data/raw/IST_corrected.csv",
+  "rows": 19435,
+  "columns": 112,
+  "duplicate_rows": 0,
+  "fully_complete_columns": 50
+}
