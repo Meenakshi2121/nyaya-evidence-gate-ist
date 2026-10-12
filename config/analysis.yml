@@ -8,7 +8,8 @@ data:
   raw_file: "data/raw/IST_corrected.csv"
   # Confirm these names and codings using scripts/inspect_ist.py before analysis.
   columns:
-    participant_id: "HOSPNUM"
+    participant_id: "__generated_from_source_row__"
+    hospital_id: "HOSPNUM"
     aspirin_allocation: "RXASP"
     heparin_allocation: "RXHEP"
     six_month_outcome: "OCCODE"
