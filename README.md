@@ -1,27 +1,84 @@
 # Nyāya-Inspired Evidence Gate for Clinical Treatment Recommendations
 
-This repository contains the protocol, analysis code and reproducibility materials for a non-compensatory evidence-gating framework for individualised clinical treatment recommendations.
+This repository contains the analysis code and reproducibility materials for a
+non-compensatory evidence gate for individualised clinical treatment
+recommendations. The proof-of-concept case study uses aspirin allocation in the
+International Stroke Trial (IST).
 
-The proof-of-concept study uses the International Stroke Trial to compare:
+The analysis compares:
 
 1. treating all patients with aspirin;
 2. ungated individualisation;
 3. Nyāya-inspired evidence-gated individualisation; and
 4. uncertainty-only abstention at matched coverage.
 
-## Analysis status
+## Current stage
 
-An earlier exploratory analysis using a different gate specification informed development of the framework. The final estimator set, gate definition, thresholds, comparisons and analysis procedures will be recorded before the final analysis. Subsequent changes will be documented transparently.
+This starter release performs the reproducible data-ingestion and audit stage,
+implements the Boolean gate and policy definitions, and provides tested
+augmented inverse-probability-weighted policy evaluation. The treatment-effect
+models will be finalised only after the IST column audit has confirmed the exact
+coding of treatment, outcome, heparin allocation and baseline variables.
+
+No numerical study result is hard-coded in this repository.
 
 ## Data
 
-The International Stroke Trial database is publicly available from the University of Edinburgh DataShare:
+Download the International Stroke Trial database (version 2) from:
 
-Sandercock P, Niewada M, Czlonkowska A. *International Stroke Trial database (version 2).*  
 https://doi.org/10.7488/ds/104
 
-The dataset will not be duplicated in this repository. Instructions for obtaining and preparing it will be provided.
+Place the CSV file at `data/raw/IST_corrected.csv`. Raw and processed patient
+data are excluded from version control and must not be uploaded to GitHub.
 
-## Repository status
+## Installation
 
-The repository is under active development. Methods, code and outputs may change until the final analysis protocol is tagged.
+Python 3.11 is recommended.
+
+```bash
+python -m venv .venv
+```
+
+Windows PowerShell:
+
+```powershell
+.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+macOS or Linux:
+
+```bash
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+## Run the first calculation
+
+```bash
+python scripts/inspect_ist.py --input data/raw/IST_corrected.csv
+```
+
+This creates:
+
+- `results/tables/column_inventory.csv`;
+- `results/tables/value_inventory.csv`;
+- `results/tables/missingness.csv`; and
+- `results/data_audit.json`.
+
+Review these files before editing the column mappings in `config/analysis.yml`.
+
+## Tests
+
+```bash
+pytest
+```
+
+## Reproducibility rule
+
+The analysis configuration is read from `config/analysis.yml`. Changes to model
+definitions, thresholds or estimands must be committed before the affected
+results are generated.
+
