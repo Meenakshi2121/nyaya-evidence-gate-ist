@@ -14,11 +14,11 @@ The analysis compares:
 
 ## Current stage
 
-This starter release performs the reproducible data-ingestion and audit stage,
-implements the Boolean gate and policy definitions, and provides tested
-augmented inverse-probability-weighted policy evaluation. The treatment-effect
-models will be finalised only after the IST column audit has confirmed the exact
-coding of treatment, outcome, heparin allocation and baseline variables.
+The repository performs reproducible data ingestion and audit, training-fold
+preprocessing, the three prespecified treatment-effect estimators, Boolean gate
+construction, matched-coverage policy definition and tested augmented
+inverse-probability-weighted policy evaluation. The next implementation stage
+connects these components in the primary five-fold analysis runner.
 
 No numerical study result is hard-coded in this repository.
 

@@ -71,6 +71,10 @@ estimators:
     - gradient_boosted_t_learner
   causal_forest:
     implementation: econml.CausalForestDML
+    model_y: auto
+    model_t: auto
+    discrete_outcome: true
+    nuisance_cv: 2
     n_estimators: 1000
     min_samples_leaf: 20
     max_depth: null
@@ -78,6 +82,8 @@ estimators:
     honest: true
     inference: true
     discrete_treatment: true
+    subforest_size: 4
+    n_jobs: -1
     random_state: 20261012
   penalised_logistic_interactions:
     treatment_effect_scale: predicted_probability_difference
