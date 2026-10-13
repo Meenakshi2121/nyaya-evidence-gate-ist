@@ -158,6 +158,9 @@ def main() -> None:
     analysis.policy_risks.to_csv(table_dir / "primary_policy_risks.csv", index=False)
     analysis.group_gains.to_csv(table_dir / "primary_group_gains.csv", index=False)
     analysis.check_patterns.to_csv(table_dir / "gate_check_patterns.csv", index=False)
+    analysis.selection_overlap.to_csv(
+        table_dir / "gate_vs_uncertainty_overlap.csv", index=False
+    )
     with (results_dir / "primary_analysis_summary.json").open(
         "w", encoding="utf-8"
     ) as stream:

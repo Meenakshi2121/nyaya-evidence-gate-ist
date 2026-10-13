@@ -84,7 +84,9 @@ The second command fits all three estimators in each training fold, predicts
 only its held-out fold, applies the three evidence checks and evaluates every
 policy using augmented inverse-probability weighting. It writes aggregate
 tables under `results/` and a Git-ignored patient-level audit file under
-`data/processed/`.
+`data/processed/`. The aggregate outputs include the overlap between gate and
+uncertainty-only selections, so matched coverage is not mistaken for selecting
+the same patients.
 
 ## Tests
 

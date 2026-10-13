@@ -25,6 +25,7 @@ class PrimaryAnalysis:
     policy_risks: pd.DataFrame
     group_gains: pd.DataFrame
     check_patterns: pd.DataFrame
+    selection_overlap: pd.DataFrame
     summary: dict[str, Any]
 
 
@@ -203,6 +204,24 @@ def assemble_primary_analysis(
     )
     check_patterns["proportion"] = check_patterns["n"] / len(data)
 
+    overlap_categories = {
+        "accepted_by_both": (gate == 1) & (uncertainty_acceptance == 1),
+        "gate_only": (gate == 1) & (uncertainty_acceptance == 0),
+        "uncertainty_only": (gate == 0) & (uncertainty_acceptance == 1),
+        "deferred_by_both": (gate == 0) & (uncertainty_acceptance == 0),
+    }
+    selection_overlap = pd.DataFrame(
+        {
+            "selection_pattern": list(overlap_categories),
+            "n": [int(mask.sum()) for mask in overlap_categories.values()],
+        }
+    )
+    selection_overlap["proportion"] = selection_overlap["n"] / len(data)
+    accepted_intersection = int(overlap_categories["accepted_by_both"].sum())
+    accepted_union = int(((gate == 1) | (uncertainty_acceptance == 1)).sum())
+    acceptance_agreement = float((gate == uncertainty_acceptance).mean())
+    accepted_set_jaccard = float(accepted_intersection / accepted_union)
+
     patient_results = pd.DataFrame(
         {
             "study_row_id": data["study_row_id"].to_numpy(),
@@ -248,6 +267,18 @@ def assemble_primary_analysis(
             },
         },
         "matched_uncertainty_coverage": float(uncertainty_acceptance.mean()),
+        "gate_vs_uncertainty_selection": {
+            "accepted_by_both_n": accepted_intersection,
+            "gate_only_n": int(overlap_categories["gate_only"].sum()),
+            "uncertainty_only_n": int(
+                overlap_categories["uncertainty_only"].sum()
+            ),
+            "deferred_by_both_n": int(
+                overlap_categories["deferred_by_both"].sum()
+            ),
+            "acceptance_agreement": acceptance_agreement,
+            "accepted_set_jaccard": accepted_set_jaccard,
+        },
         "interval_sensitivity_coverage": float(interval_acceptance.mean()),
         "support_threshold_by_fold": {
             str(key): float(value)
@@ -273,5 +304,6 @@ def assemble_primary_analysis(
         policy_risks=policy_risks,
         group_gains=group_gains,
         check_patterns=check_patterns,
+        selection_overlap=selection_overlap,
         summary=summary,
     )

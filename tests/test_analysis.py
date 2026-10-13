@@ -50,6 +50,17 @@ def test_primary_analysis_assembles_gate_policies_and_matched_coverage():
         "uncertainty_interval_sensitivity",
     }
     assert set(result.group_gains["gate_group"]) == {"accepted", "deferred"}
+    assert result.selection_overlap["n"].sum() == n
+    assert set(result.selection_overlap["selection_pattern"]) == {
+        "accepted_by_both",
+        "gate_only",
+        "uncertainty_only",
+        "deferred_by_both",
+    }
+    overlap = result.summary["gate_vs_uncertainty_selection"]
+    assert overlap["gate_only_n"] == overlap["uncertainty_only_n"]
+    assert 0 <= overlap["acceptance_agreement"] <= 1
+    assert 0 <= overlap["accepted_set_jaccard"] <= 1
     assert np.isfinite(result.policy_risks["expected_risk"]).all()
     assert (
         result.summary["gate"]["accepted_n"]
