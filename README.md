@@ -18,8 +18,10 @@ The repository performs reproducible data ingestion and audit, training-fold
 preprocessing, the three prespecified treatment-effect estimators, Boolean gate
 construction, matched-coverage policy definition and augmented
 inverse-probability-weighted policy evaluation. The primary runner connects
-these components in a strictly held-out five-fold point analysis. Whole-pipeline
-bootstrap inference is the remaining implementation stage.
+these components in a strictly held-out five-fold point analysis. The
+whole-pipeline bootstrap is implemented as independently saved, resumable
+batches; final interval estimation remains pending until all prespecified
+replicates have completed.
 
 No numerical study result is hard-coded in this repository.
 
@@ -87,6 +89,41 @@ tables under `results/` and a Git-ignored patient-level audit file under
 `data/processed/`. The aggregate outputs include the overlap between gate and
 uncertainty-only selections, so matched coverage is not mistaken for selecting
 the same patients.
+
+## Run bootstrap inference
+
+First run one complete replicate as a timing and integrity check:
+
+```bash
+python scripts/run_bootstrap.py --start 0 --stop 1
+```
+
+`--stop` is exclusive. Completed replicates are saved atomically under
+`results/bootstrap/`, which is excluded from Git. Rerunning an overlapping
+range safely skips completed replicates. A fingerprint prevents batches made
+with different data, configuration or analysis code from being combined.
+
+After reviewing the pilot runtime, continue in manageable batches, for example:
+
+```bash
+python scripts/run_bootstrap.py --start 1 --stop 10
+```
+
+The exact models are refitted in every replicate, so 1,000 replicates are
+computationally expensive. Do not start the full range until the pilot runtime
+has been reviewed and a suitable compute plan has been agreed.
+
+Only after all 1,000 replicates are complete, create the aggregate confidence
+interval outputs:
+
+```bash
+python scripts/summarise_bootstrap.py
+```
+
+The summariser refuses to run when a replicate is missing. It writes the
+tracked aggregate files `results/bootstrap_summary.json` and
+`results/tables/bootstrap_confidence_intervals.csv`; individual replicate
+files remain excluded from version control.
 
 ## Tests
 

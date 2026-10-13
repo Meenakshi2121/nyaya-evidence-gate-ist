@@ -44,6 +44,7 @@ def assemble_primary_analysis(
     outcome_risk_aspirin: np.ndarray,
     support_thresholds: dict[int, float],
     propensity: float = 0.5,
+    analysis_row_id: np.ndarray | None = None,
 ) -> PrimaryAnalysis:
     """Construct policies and point estimates from strictly held-out values."""
     required = {"study_row_id", "aspirin", "outcome"}
@@ -77,6 +78,15 @@ def assemble_primary_analysis(
     if not np.isin(arrays["reference_supported"], [0, 1]).all():
         raise ValueError("reference_supported must be binary.")
 
+    if analysis_row_id is None:
+        row_id = data["study_row_id"].to_numpy()
+    else:
+        row_id = np.asarray(analysis_row_id)
+    if row_id.ndim != 1 or len(row_id) != len(data):
+        raise ValueError("analysis_row_id must contain one value per row.")
+    if len(np.unique(row_id)) != len(row_id):
+        raise ValueError("analysis_row_id values must be unique.")
+
     effects = np.column_stack(
         [
             arrays["causal_forest_effect"],
@@ -97,7 +107,7 @@ def assemble_primary_analysis(
         gate,
         arrays["causal_forest_standard_error"],
         arrays["fold"],
-        data["study_row_id"].to_numpy(),
+        row_id,
     )
     uncertainty_policy = gated_policy(
         uncertainty_acceptance, individualised, default_treatment=1
@@ -225,6 +235,7 @@ def assemble_primary_analysis(
     patient_results = pd.DataFrame(
         {
             "study_row_id": data["study_row_id"].to_numpy(),
+            "analysis_row_id": row_id,
             "fold": arrays["fold"],
             "aspirin": a,
             "outcome": y,
