@@ -2,11 +2,11 @@ project:
   name: nyaya-evidence-gate-ist
   random_seed: 20261012
   analysis_status: final_specification_after_exploratory_analysis
+  specification_date: "2026-10-13"
 
 data:
   source_doi: "10.7488/ds/104"
   raw_file: "data/raw/IST_corrected.csv"
-  # Confirm these names and codings using scripts/inspect_ist.py before analysis.
   columns:
     participant_id: "__generated_from_source_row__"
     hospital_id: "HOSPNUM"
@@ -19,18 +19,49 @@ data:
     favourable_codes: [3, 4]
     missing_codes: [0, 9]
   aspirin:
-    treated_values: ["Y"]
-    control_values: ["N"]
-
+    treated_values: ["Y", "A", 1]
+    control_values: ["N", 0]
+    nominal_randomisation_probability: 0.5
   heparin:
-    no_heparin_values: ["N"]
-    low_dose_values: ["L"]
-    higher_dose_values: ["H", "M"]
+    none_values: ["N"]
+    low_values: ["L"]
+    higher_values: ["M", "H"]
+  baseline_variables:
+    - RDELAY
+    - RCONSC
+    - SEX
+    - AGE
+    - RSLEEP
+    - RATRIAL
+    - RCT
+    - RVISINF
+    - RHEP24
+    - RASP3
+    - RSBP
+    - RDEF1
+    - RDEF2
+    - RDEF3
+    - RDEF4
+    - RDEF5
+    - RDEF6
+    - RDEF7
+    - RDEF8
+    - STYPE
 
 cross_fitting:
   folds: 5
+  stratification: joint_aspirin_allocation_and_outcome
   primary_seed: 20261012
   sensitivity_partitions: 20
+  sensitivity_summary: median_range_and_patient_acceptance_frequency
+
+preprocessing:
+  fit_on_training_fold_only: true
+  numeric_imputation: median
+  categorical_imputation: most_frequent
+  add_missingness_indicators: true
+  encode_categorical_variables: one_hot_ignore_unknown
+  standardise_for_penalised_model: true
 
 estimators:
   primary: causal_forest
@@ -38,20 +69,122 @@ estimators:
     - causal_forest
     - penalised_logistic_interactions
     - gradient_boosted_t_learner
+  causal_forest:
+    implementation: econml.CausalForestDML
+    n_estimators: 1000
+    min_samples_leaf: 20
+    max_depth: null
+    max_samples: 0.45
+    honest: true
+    inference: true
+    discrete_treatment: true
+    random_state: 20261012
+  penalised_logistic_interactions:
+    treatment_effect_scale: predicted_probability_difference
+    penalty: l2
+    C: 1.0
+    solver: lbfgs
+    max_iter: 5000
+    include_all_treatment_by_covariate_interactions: true
+  gradient_boosted_t_learner:
+    implementation: sklearn.HistGradientBoostingClassifier
+    learning_rate: 0.05
+    max_iter: 300
+    max_leaf_nodes: 15
+    min_samples_leaf: 20
+    l2_regularization: 1.0
+    random_state: 20261012
 
 gate:
   rule: data_adequacy AND reference_support AND estimator_agreement
-  support_method: gower_knn
-  neighbours: 50
-  support_quantile: 0.95
-  estimator_agreement: unanimous_action
+  data_adequacy:
+    essential_variables:
+      - RDELAY
+      - RCONSC
+      - SEX
+      - AGE
+      - RSLEEP
+      - RATRIAL
+      - RCT
+      - RVISINF
+      - RHEP24
+      - RASP3
+      - RSBP
+      - RDEF1
+      - RDEF2
+      - RDEF3
+      - RDEF4
+      - RDEF5
+      - RDEF6
+      - RDEF7
+      - RDEF8
+      - STYPE
+    pass_rule: all_essential_variables_observed_and_dictionary_valid
+    retain_failed_patients_for_model_training: true
+    audited_complete_patients: 18304
+    audited_failed_patients: 981
+    structural_missingness_note: RATRIAL was not collected during the pilot phase
+  reference_support:
+    method: gower_knn
+    neighbours_per_treatment_arm: 50
+    patient_score: maximum_of_arm_specific_mean_neighbour_distances
+    threshold: training_fold_leave_one_out_95th_percentile
+    require_support_in_both_aspirin_arms: true
+  estimator_agreement:
+    rule: unanimous_recommended_action
+    aspirin_when_risk_difference_below: 0.0
+    zero_effect_action: no_aspirin
+    non_finite_estimate: fail
+
+policies:
+  evidence_based_default: treat_all_with_aspirin
+  individualised: causal_forest_action
+  gated:
+    accepted: causal_forest_action
+    deferred: treat_with_aspirin
+  uncertainty_only:
+    accepted: causal_forest_action
+    deferred: treat_with_aspirin
 
 uncertainty_comparator:
   measure: causal_forest_standard_error
-  coverage: matched_within_held_out_fold
+  coverage: matched_within_each_held_out_fold
+  tie_breaker: generated_participant_id
+  sensitivity_rule: defer_when_95_percent_effect_interval_crosses_zero
+
+policy_evaluation:
+  estimand: expected_six_month_risk_of_death_or_dependency
+  direction: lower_is_better
+  estimator: augmented_inverse_probability_weighting
+  outcome_regression: cross_fitted_gradient_boosted_t_learner
+  propensity: fixed_nominal_randomisation_probability_0.5
+  primary_policy_comparisons:
+    - gated_minus_treat_all
+    - gated_minus_ungated_individualisation
+    - gated_minus_uncertainty_only_matched_coverage
+  within_group_gain:
+    definition: treat_all_risk_minus_individualised_risk
+    groups: [accepted, deferred]
+    principal_contrast: accepted_gain_minus_deferred_gain
+  report_no_aspirin_recommendations_by_gate_group: true
+
+factorial_trial_handling:
+  include_heparin_allocation_as_covariate: true
+  pool_higher_dose_codes: ["M", "H"]
+  aspirin_heparin_interaction: sensitivity_analysis
 
 inference:
   method: whole_pipeline_stratified_bootstrap
   bootstrap_replicates: 1000
+  bootstrap_stratification: joint_aspirin_allocation_and_outcome
   confidence_level: 0.95
+  interval_type: percentile
+  repeat_imputation_models_gate_and_policy_in_each_replicate: true
 
+reporting:
+  report_gate_coverage_and_each_check_failure: true
+  report_check_failure_overlap: true
+  report_gate_status_stability_across_partitions: true
+  report_effect_sizes_with_confidence_intervals: true
+  patient_level_outputs_in_version_control: false
+  guideline: TRIPOD_plus_AI
