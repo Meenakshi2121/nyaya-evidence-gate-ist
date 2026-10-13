@@ -16,9 +16,10 @@ The analysis compares:
 
 The repository performs reproducible data ingestion and audit, training-fold
 preprocessing, the three prespecified treatment-effect estimators, Boolean gate
-construction, matched-coverage policy definition and tested augmented
-inverse-probability-weighted policy evaluation. The next implementation stage
-connects these components in the primary five-fold analysis runner.
+construction, matched-coverage policy definition and augmented
+inverse-probability-weighted policy evaluation. The primary runner connects
+these components in a strictly held-out five-fold point analysis. Whole-pipeline
+bootstrap inference is the remaining implementation stage.
 
 No numerical study result is hard-coded in this repository.
 
@@ -69,6 +70,21 @@ This creates:
 - `results/data_audit.json`.
 
 Review these files before editing the column mappings in `config/analysis.yml`.
+
+## Run the primary point analysis
+
+Prepare the analysis cohort, then run the five-fold analysis:
+
+```bash
+python scripts/prepare_ist.py
+python scripts/run_primary_analysis.py
+```
+
+The second command fits all three estimators in each training fold, predicts
+only its held-out fold, applies the three evidence checks and evaluates every
+policy using augmented inverse-probability weighting. It writes aggregate
+tables under `results/` and a Git-ignored patient-level audit file under
+`data/processed/`.
 
 ## Tests
 

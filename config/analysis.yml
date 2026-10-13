@@ -47,6 +47,27 @@ data:
     - RDEF7
     - RDEF8
     - STYPE
+  modelling_variables:
+    numeric: [RDELAY, AGE, RSBP]
+    categorical:
+      - RCONSC
+      - SEX
+      - RSLEEP
+      - RATRIAL
+      - RCT
+      - RVISINF
+      - RHEP24
+      - RASP3
+      - RDEF1
+      - RDEF2
+      - RDEF3
+      - RDEF4
+      - RDEF5
+      - RDEF6
+      - RDEF7
+      - RDEF8
+      - STYPE
+      - heparin_group
 
 cross_fitting:
   folds: 5

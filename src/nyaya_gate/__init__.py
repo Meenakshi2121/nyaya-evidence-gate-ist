@@ -1,6 +1,7 @@
 """Utilities for the Nyāya-inspired IST evidence-gate analysis."""
 
 from .adequacy import data_adequacy_check
+from .analysis import PrimaryAnalysis, assemble_primary_analysis
 from .crossfit import make_stratified_folds
 from .estimators import EffectPredictions, fit_effect_estimators
 from .evaluation import aipw_policy_risk, group_policy_gain
@@ -11,6 +12,7 @@ from .support import GowerReferenceSupport
 
 __all__ = [
     "aipw_policy_risk",
+    "assemble_primary_analysis",
     "build_gate",
     "data_adequacy_check",
     "EffectPredictions",
@@ -22,5 +24,6 @@ __all__ = [
     "individualised_policy",
     "make_stratified_folds",
     "matched_uncertainty_acceptance",
+    "PrimaryAnalysis",
 ]
 
