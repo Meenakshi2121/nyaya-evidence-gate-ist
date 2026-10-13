@@ -1,0 +1,6 @@
+policy,expected_risk,n_recommended_aspirin,n_recommended_no_aspirin,risk_difference_vs_treat_all
+treat_all_aspirin,0.6220422665171874,19285,0,0.0
+ungated_individualisation,0.6247179346908334,14634,4651,0.002675668173645951
+evidence_gated,0.6223183164828502,17500,1785,0.0002760499656627724
+uncertainty_only_matched_coverage,0.6236155659964561,16890,2395,0.0015732994792686528
+uncertainty_interval_sensitivity,0.6219511884677019,19273,12,-9.107804948549347e-05

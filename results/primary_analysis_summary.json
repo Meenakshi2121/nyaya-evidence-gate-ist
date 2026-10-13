@@ -1,0 +1,51 @@
+{
+  "analysis_rows": 19285,
+  "folds": 5,
+  "gate": {
+    "accepted_n": 8790,
+    "deferred_n": 10495,
+    "coverage": 0.4557946590614467,
+    "check_failures": {
+      "data_adequacy": 981,
+      "reference_support": 958,
+      "estimator_agreement": 9797
+    }
+  },
+  "matched_uncertainty_coverage": 0.4557946590614467,
+  "gate_vs_uncertainty_selection": {
+    "accepted_by_both_n": 3898,
+    "gate_only_n": 4892,
+    "uncertainty_only_n": 4892,
+    "deferred_by_both_n": 5603,
+    "acceptance_agreement": 0.4926626912107856,
+    "accepted_set_jaccard": 0.28489986844028653
+  },
+  "interval_sensitivity_coverage": 0.05242416385792066,
+  "support_threshold_by_fold": {
+    "0": 0.19781754443644212,
+    "1": 0.1975750208127342,
+    "2": 0.1976643206599698,
+    "3": 0.1974158606462323,
+    "4": 0.1956523890797165
+  },
+  "policy_expected_risks": {
+    "treat_all_aspirin": 0.6220422665171874,
+    "ungated_individualisation": 0.6247179346908334,
+    "evidence_gated": 0.6223183164828502,
+    "uncertainty_only_matched_coverage": 0.6236155659964561,
+    "uncertainty_interval_sensitivity": 0.6219511884677019
+  },
+  "policy_risk_differences_vs_treat_all": {
+    "treat_all_aspirin": 0.0,
+    "ungated_individualisation": 0.002675668173645951,
+    "evidence_gated": 0.0002760499656627724,
+    "uncertainty_only_matched_coverage": 0.0015732994792686528,
+    "uncertainty_interval_sensitivity": -9.107804948549347e-05
+  },
+  "within_group_gain": {
+    "accepted": -0.0006056454593633687,
+    "deferred": -0.004409398488895433
+  },
+  "principal_contrast_accepted_minus_deferred_gain": 0.0038037530295320643,
+  "inference_status": "point_estimates_only_pending_whole_pipeline_bootstrap"
+}

@@ -1,0 +1,5 @@
+selection_pattern,n,proportion
+accepted_by_both,3898,0.20212600466683953
+gate_only,4892,0.25366865439460723
+uncertainty_only,4892,0.25366865439460723
+deferred_by_both,5603,0.2905366865439461
