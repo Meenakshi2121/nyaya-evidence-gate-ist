@@ -2,25 +2,25 @@
   "analysis_rows": 19285,
   "folds": 5,
   "gate": {
-    "accepted_n": 8790,
-    "deferred_n": 10495,
-    "coverage": 0.4557946590614467,
+    "accepted_n": 8799,
+    "deferred_n": 10486,
+    "coverage": 0.45626134301270416,
     "check_failures": {
       "data_adequacy": 981,
       "reference_support": 958,
-      "estimator_agreement": 9797
+      "estimator_agreement": 9777
     }
   },
-  "matched_uncertainty_coverage": 0.4557946590614467,
+  "matched_uncertainty_coverage": 0.45626134301270416,
   "gate_vs_uncertainty_selection": {
-    "accepted_by_both_n": 3898,
-    "gate_only_n": 4892,
-    "uncertainty_only_n": 4892,
-    "deferred_by_both_n": 5603,
-    "acceptance_agreement": 0.4926626912107856,
-    "accepted_set_jaccard": 0.28489986844028653
+    "accepted_by_both_n": 3933,
+    "gate_only_n": 4866,
+    "uncertainty_only_n": 4866,
+    "deferred_by_both_n": 5620,
+    "acceptance_agreement": 0.49535908737360645,
+    "accepted_set_jaccard": 0.28781558726673984
   },
-  "interval_sensitivity_coverage": 0.05242416385792066,
+  "interval_sensitivity_coverage": 0.04687581021519315,
   "support_threshold_by_fold": {
     "0": 0.19781754443644212,
     "1": 0.1975750208127342,
@@ -30,22 +30,22 @@
   },
   "policy_expected_risks": {
     "treat_all_aspirin": 0.6220422665171874,
-    "ungated_individualisation": 0.6247179346908334,
-    "evidence_gated": 0.6223183164828502,
-    "uncertainty_only_matched_coverage": 0.6236155659964561,
-    "uncertainty_interval_sensitivity": 0.6219511884677019
+    "ungated_individualisation": 0.6248377702478052,
+    "evidence_gated": 0.6233777429497643,
+    "uncertainty_only_matched_coverage": 0.6220344501295494,
+    "uncertainty_interval_sensitivity": 0.6219844953347892
   },
   "policy_risk_differences_vs_treat_all": {
     "treat_all_aspirin": 0.0,
-    "ungated_individualisation": 0.002675668173645951,
-    "evidence_gated": 0.0002760499656627724,
-    "uncertainty_only_matched_coverage": 0.0015732994792686528,
-    "uncertainty_interval_sensitivity": -9.107804948549347e-05
+    "ungated_individualisation": 0.0027955037306177655,
+    "evidence_gated": 0.0013354764325769208,
+    "uncertainty_only_matched_coverage": -7.816387638026612e-06,
+    "uncertainty_interval_sensitivity": -5.777118239824741e-05
   },
   "within_group_gain": {
-    "accepted": -0.0006056454593633687,
-    "deferred": -0.004409398488895433
+    "accepted": -0.0029269988637622424,
+    "deferred": -0.00268516368898708
   },
-  "principal_contrast_accepted_minus_deferred_gain": 0.0038037530295320643,
+  "principal_contrast_accepted_minus_deferred_gain": -0.00024183517477516236,
   "inference_status": "point_estimates_only_pending_whole_pipeline_bootstrap"
 }

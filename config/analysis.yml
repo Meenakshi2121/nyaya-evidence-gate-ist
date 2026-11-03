@@ -96,6 +96,7 @@ estimators:
     model_t: auto
     discrete_outcome: true
     nuisance_cv: 2
+    nuisance_linear_max_iter: 5000
     n_estimators: 1000
     min_samples_leaf: 20
     max_depth: null

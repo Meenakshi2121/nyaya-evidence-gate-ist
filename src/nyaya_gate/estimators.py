@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 from econml.dml import CausalForestDML
 from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression, LogisticRegressionCV
 from sklearn.preprocessing import StandardScaler
 
 from .preprocessing import FoldPreprocessor
@@ -117,9 +117,39 @@ class CausalForestRiskDifference:
         y = _binary_vector(outcome, "outcome")
         if not (len(x) == len(a) == len(y)):
             raise ValueError("Features, treatment and outcome must have equal length.")
+        random_state = int(self.config["random_state"])
+        nuisance_max_iter = int(
+            self.config.get("nuisance_linear_max_iter", 5000)
+        )
+        model_y_name = str(self.config.get("model_y", "auto"))
+        model_t_name = str(self.config.get("model_t", "auto"))
+
+        model_y = (
+            [
+                "forest",
+                LogisticRegressionCV(
+                    max_iter=nuisance_max_iter,
+                    random_state=random_state,
+                ),
+            ]
+            if model_y_name == "auto"
+            else model_y_name
+        )
+        model_t = (
+            [
+                "forest",
+                LogisticRegressionCV(
+                    max_iter=nuisance_max_iter,
+                    random_state=random_state,
+                ),
+            ]
+            if model_t_name == "auto"
+            else model_t_name
+        )
+
         self.model_ = CausalForestDML(
-            model_y=str(self.config.get("model_y", "auto")),
-            model_t=str(self.config.get("model_t", "auto")),
+            model_y=model_y,
+            model_t=model_t,
             discrete_outcome=bool(self.config.get("discrete_outcome", True)),
             discrete_treatment=bool(self.config["discrete_treatment"]),
             cv=int(self.config.get("nuisance_cv", 2)),
@@ -131,7 +161,7 @@ class CausalForestRiskDifference:
             inference=bool(self.config["inference"]),
             subforest_size=int(self.config.get("subforest_size", 4)),
             n_jobs=int(self.config.get("n_jobs", -1)),
-            random_state=int(self.config["random_state"]),
+            random_state=random_state,
         )
         self.model_.fit(y, a, X=x)
         return self
