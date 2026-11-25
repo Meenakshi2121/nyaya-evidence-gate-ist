@@ -31,3 +31,12 @@ results/bootstrap/*
 *.pkl
 *.joblib
 
+# Bootstrap working artefacts; aggregate outputs are tracked separately
+logs/
+results/bootstrap_final/
+results/bootstrap_smoke/
+results/bootstrap_grouped_smoke_*/
+results/bootstrap_grouped_pilot_*/
+results/bootstrap_grouped_final/replicates/
+results/bootstrap_summary_invalid_pre_grouping.json
+results/tables/bootstrap_confidence_intervals_invalid_pre_grouping.csv

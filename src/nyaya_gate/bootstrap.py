@@ -183,6 +183,7 @@ def run_bootstrap_replicate(
         fold_seed=seeds["folds"],
         estimator_seed=seeds["estimators"],
         analysis_row_id=sample["bootstrap_row_id"].to_numpy(),
+        fold_group_id=sample["study_row_id"].to_numpy(),
         model_n_jobs=model_n_jobs,
         progress=report,
     )

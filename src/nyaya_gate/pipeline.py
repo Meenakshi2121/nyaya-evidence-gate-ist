@@ -10,7 +10,10 @@ import pandas as pd
 
 from .adequacy import data_adequacy_check
 from .analysis import PrimaryAnalysis, assemble_primary_analysis
-from .crossfit import make_stratified_folds
+from .crossfit import (
+    make_grouped_stratified_folds,
+    make_stratified_folds,
+)
 from .estimators import fit_effect_estimators
 from .support import GowerReferenceSupport
 
@@ -24,15 +27,17 @@ def run_cross_fitted_analysis(
     fold_seed: int | None = None,
     estimator_seed: int | None = None,
     analysis_row_id: np.ndarray | None = None,
+    fold_group_id: np.ndarray | None = None,
     model_n_jobs: int | None = None,
     progress: ProgressCallback | None = None,
 ) -> PrimaryAnalysis:
     """Fit every model on training folds and analyse held-out predictions.
 
     ``analysis_row_id`` must be unique within the supplied data. It is used for
-    deterministic fold assignment and matched-coverage tie-breaking. Bootstrap
-    samples therefore retain the original ``study_row_id`` for provenance while
-    supplying a new unique draw-level identifier here.
+    deterministic matched-coverage tie-breaking.
+
+    ``fold_group_id`` may identify repeated draws from the same source
+    participant. All rows sharing an identifier stay in one cross-fitting fold.
     """
     modelling = config["data"]["modelling_variables"]
     numeric = tuple(modelling["numeric"])
@@ -63,13 +68,22 @@ def run_cross_fitted_analysis(
     selected_fold_seed = (
         int(crossfit["primary_seed"]) if fold_seed is None else int(fold_seed)
     )
-    folds = make_stratified_folds(
-        treatment,
-        outcome,
-        n_splits=int(crossfit["folds"]),
-        random_state=selected_fold_seed,
-        participant_id=row_id,
-    )
+    if fold_group_id is None:
+        folds = make_stratified_folds(
+            treatment,
+            outcome,
+            n_splits=int(crossfit["folds"]),
+            random_state=selected_fold_seed,
+            participant_id=row_id,
+        )
+    else:
+        folds = make_grouped_stratified_folds(
+            treatment,
+            outcome,
+            n_splits=int(crossfit["folds"]),
+            random_state=selected_fold_seed,
+            group_id=np.asarray(fold_group_id),
+        )
 
     estimator_config = deepcopy(config["estimators"])
     if estimator_seed is not None:
