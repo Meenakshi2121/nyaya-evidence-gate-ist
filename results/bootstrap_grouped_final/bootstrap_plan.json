@@ -1,0 +1,8 @@
+{
+  "analysis_fingerprint": "1d3a3be98ac29ec3506a5d75e1b0d1e19007a7a793b51283528956373e08d9b3",
+  "master_seed": 20261012,
+  "replicate_indexing": "zero_based_start_inclusive_stop_exclusive",
+  "resampling": "within_joint_aspirin_outcome_strata",
+  "schema_version": 1,
+  "target_replicates": 1000
+}

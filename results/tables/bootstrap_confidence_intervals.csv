@@ -1,0 +1,5 @@
+estimand,description,favourable_direction,point_estimate,bootstrap_mean,bootstrap_standard_error,ci_lower,ci_upper,confidence_level,interval_method,bootstrap_replicates
+gated_minus_treat_all,Expected-risk difference: gated minus treat-all aspirin,below_zero,0.0009388035579637188,0.0019765293248339456,0.0027880341994325664,-0.0034656017333548846,0.007781848190657447,0.95,percentile,1000
+gated_minus_ungated_individualisation,Expected-risk difference: gated minus ungated individualisation,below_zero,-0.0016048091680342935,-0.004183399313892341,0.003657307892887426,-0.012338397562008892,0.0024170009434973786,0.95,percentile,1000
+gated_minus_uncertainty_only_matched_coverage,Expected-risk difference: gated minus uncertainty-only at matched coverage,below_zero,0.0020113733093271025,0.0002861808906270098,0.003338970561837311,-0.006294370169520424,0.006806262009863827,0.95,percentile,1000
+accepted_minus_deferred_gain,Gain from individualisation: accepted minus deferred,above_zero,0.0008917730399720103,0.0021931691431123436,0.00992736032647018,-0.0172349764204853,0.02276475888474419,0.95,percentile,1000
