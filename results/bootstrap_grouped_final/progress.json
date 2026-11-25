@@ -1,7 +1,7 @@
 {
   "analysis_fingerprint": "1d3a3be98ac29ec3506a5d75e1b0d1e19007a7a793b51283528956373e08d9b3",
-  "completed_replicates": 157,
-  "next_missing_replicate": 100,
+  "completed_replicates": 1000,
+  "next_missing_replicate": null,
   "schema_version": 1,
   "target_replicates": 1000
 }
